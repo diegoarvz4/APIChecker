@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  post 'auth/login', to: 'authentication#create'
+  post 'login', to: 'authentication#create'
   post 'signup', to: 'users#create'
 
-  get 'admin/access_reports', to: 'access_reports#index'
+  get 'access_reports', to: 'access_reports#index'
   get 'admin/employees/:id', to: 'users#show'
   get '/employee/:id/access_reports', to: 'access_reports#index'
 

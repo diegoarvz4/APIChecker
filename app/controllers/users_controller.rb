@@ -1,10 +1,12 @@
 class UsersController < ApplicationController
-  before_action :admin?, only: :show
+  before_action :allowed?, only: [:index, :show]
   skip_before_action :authorize_request, only: :create
 
   def index
     user = User.all
-    render json: user, status: :ok
+    render json: user, 
+      except: [:created_at, :updated_at, :password_digest, :admin],
+      status: :ok
   end
 
   def show
@@ -12,10 +14,10 @@ class UsersController < ApplicationController
     render json: user,
       include: {
         access_reports: {
-          except: [ :created_at, :updated_at ]
+          except: [ :created_at, :updated_at, :employee_id]
         }
       },
-      except: [:created_at, :updated_at],
+      except: [:admin, :password_digest, :created_at, :updated_at],
       status: :ok
   end
 
@@ -32,7 +34,9 @@ class UsersController < ApplicationController
     params.require(:user).permit(:name, :username, :password, :password_confirmation)
   end
 
-  def admin?
-    current_user.admin?
+  def allowed?
+    unless current_user.admin
+      render json: { message: 'Unauthorized', status: :unauthorized } if current_user.id.to_i != params[:id].to_i
+    end
   end
 end
