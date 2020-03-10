@@ -4,8 +4,9 @@ Rails.application.routes.draw do
   post 'signup', to: 'users#create'
 
   get 'access_reports', to: 'access_reports#index'
-  get 'admin/employees/:id', to: 'users#show'
-  get '/employee/:id/access_reports', to: 'access_reports#index'
+  get 'employees/:id', to: 'users#show'
+  put 'employees/:id', to: 'users#update'
+  get 'employees', to: 'users#index'
 
   resources :users
   resources :access_reports

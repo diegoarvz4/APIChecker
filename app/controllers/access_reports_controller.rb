@@ -1,20 +1,25 @@
 class AccessReportsController < ApplicationController
-  before_action :allowed?
+  before_action :allowed?, except: [:index]
 
   def index
-    access_reports = 
+    access_reports =
       if current_user.admin?
-        AccessReport.all
+        AccessReport.all.order('entry DESC').filter { |ar| !ar.employee.admin}
       else
         current_user.access_reports
       end
-    render json: access_reports, 
+    render json: access_reports,
       except: [:created_at, :updated_at],
+      include: { 
+        employee: {
+          only: [:name, :username]
+        }
+      },
       status: :ok
   end
 
   def create
-    access_report = AccessReport.create!(access_reports_params)
+    AccessReport.create!(access_reports_params)
     render json: { message: 'Access Report created'}, status: :created
   end
 

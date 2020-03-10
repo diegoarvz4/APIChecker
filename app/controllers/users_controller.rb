@@ -1,10 +1,15 @@
 class UsersController < ApplicationController
-  before_action :allowed?, only: [:index, :show]
+  before_action :allowed?, only: [:index, :show, :update]
   skip_before_action :authorize_request, only: :create
 
   def index
-    user = User.all
-    render json: user, 
+    user = User.all.where(admin: [false, nil])
+    render json: user,
+      include: {
+        access_reports: {
+          except: [ :created_at, :updated_at, :employee_id]
+        }
+      },
       except: [:created_at, :updated_at, :password_digest, :admin],
       status: :ok
   end
@@ -26,6 +31,13 @@ class UsersController < ApplicationController
     auth_token = AuthenticateUser.new(user.username, user.password).call
     response = { message: "Account Created", auth_token: auth_token }
     render json: response, status: :created # 201
+  end
+
+  def update
+    user = User.find(params[:id])
+    user.update_attributes(user_params)
+    user.save!
+    render json: { message: "User updated!"}, status: :ok
   end
 
   private
