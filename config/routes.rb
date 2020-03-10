@@ -1,13 +1,12 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  post 'login', to: 'authentication#create'
-  post 'signup', to: 'users#create'
+  post 'login', to: 'authentication#create'        # create the token
+  
+  get 'employees', to: 'users#index'               # check all employees
+  get 'employees/:id', to: 'users#show'            # check specific employee
+  post 'signup', to: 'users#create'                # create a user employee
+  put 'employees/:id', to: 'users#update'          # update specfic employees info
 
-  get 'access_reports', to: 'access_reports#index'
-  get 'employees/:id', to: 'users#show'
-  put 'employees/:id', to: 'users#update'
-  get 'employees', to: 'users#index'
+  get 'access_reports', to: 'access_reports#index' # check the entry and exit of all employes if admin, if not personal reports
 
-  resources :users
-  resources :access_reports
+  resources :access_reports, only: [:show, :create, :update, :destroy]
 end
