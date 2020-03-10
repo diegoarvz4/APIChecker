@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_action :allowed?, only: [:index, :show, :update]
+  before_action :allowed?, only: [:index, :show]
+  before_action :only_admin, only: [:update]
   skip_before_action :authorize_request, only: :create
 
   def index
@@ -50,5 +51,9 @@ class UsersController < ApplicationController
     unless current_user.admin
       render json: { message: 'Unauthorized', status: :unauthorized } if current_user.id.to_i != params[:id].to_i
     end
+  end
+
+  def only_admin
+    render json: { message: 'Unauthorized', status: :unauthorized } unless current_user.admin
   end
 end
