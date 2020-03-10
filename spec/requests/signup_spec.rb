@@ -27,6 +27,8 @@ RSpec.describe 'Signup API', type: :request do
   }
 
   describe 'POST /signup' do 
+
+    # if credentials are correct, signup the user
     context 'when the request is valid' do
       before { post '/signup', params: valid_attributes.to_json, headers: headers }
 
@@ -42,6 +44,8 @@ RSpec.describe 'Signup API', type: :request do
         expect(JSON.parse(response.body)['auth_token']).not_to be_nil
       end
     end
+
+    # if credentials are missing raise and error
     context 'when the request is invalid' do
       before { post '/signup', params: invalid_attributes.to_json, headers: headers }
 

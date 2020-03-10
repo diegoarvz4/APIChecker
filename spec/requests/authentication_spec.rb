@@ -14,6 +14,7 @@ RSpec.describe 'Authentication', type: :request do
       { username: 'some_user', password: 'some_password'}.to_json
     end
 
+    # if a user loggins successfully 
     context 'when request is valid' do
       before { post '/login', params: valid_user, headers: headers }
 
@@ -22,6 +23,7 @@ RSpec.describe 'Authentication', type: :request do
       end
     end
 
+    # if user is missing credentials
     context 'when request is not valid' do
       before { post '/login', params: invalid_user, headers: headers }
 

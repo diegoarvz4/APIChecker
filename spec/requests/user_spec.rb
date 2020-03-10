@@ -18,9 +18,9 @@ RSpec.describe 'Employees API', type: :request do
     }
   }
 
-
   describe 'GET /employees' do
 
+    # if admin user fetch all employes
     context 'when admin get employees' do
       before { get '/employees', params: {}, headers: admin_headers }
 
@@ -29,6 +29,7 @@ RSpec.describe 'Employees API', type: :request do
       end
     end
 
+    # if not-admin then unauthorize the petition
     context 'when a non-admin user request' do
       before { get '/employees', params: {}, headers: non_admin_headers }
 
@@ -40,6 +41,7 @@ RSpec.describe 'Employees API', type: :request do
 
   describe 'GET /employees/:id' do
 
+    # if admin then fetch spefici employee
     context 'when admin gets specific employee' do
       before { get "/employees/#{not_admin.id}", params: {}, headers: admin_headers }
 
@@ -49,6 +51,7 @@ RSpec.describe 'Employees API', type: :request do
 
     end
 
+    # if not-admin, in can only fetch its own user
     context 'when user that is not admin tries to fetch users' do 
       before { get "/employees/#{user_admin.id}", params: {}, headers: non_admin_headers}
 
@@ -74,6 +77,7 @@ RSpec.describe 'Employees API', type: :request do
       }
     }
 
+    # only admin can edit an employees info
     context 'when admin tries to edit an employee info' do
       before { put "/employees/#{not_admin.id}", params: valid_attributes.to_json, headers: admin_headers }
 
@@ -82,6 +86,7 @@ RSpec.describe 'Employees API', type: :request do
       end
     end
 
+    # if not admin, raise unauthorized error message
     context 'when non-admin tries to edit an employee info' do
       before { put "/employees/#{not_admin.id}", params: valid_attributes.to_json, headers: non_admin_headers }
 
@@ -89,6 +94,5 @@ RSpec.describe 'Employees API', type: :request do
         expect(JSON.parse(response.body)['message']).to match(/Unauthorized/)
       end
     end
-
   end
 end

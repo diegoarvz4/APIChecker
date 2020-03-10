@@ -1,11 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AuthenticateUser do
-  # create the user factory object
   let(:user) { create(:user) }
-  # valid user for getting a token
+
   subject(:valid_auth) { described_class.new(user.username, user.password) }
-  # invalid user for raising an error
   subject(:invalid_auth) { described_class.new('some_user', 'some_password') }
 
   describe '#AuthenticateUser call' do
@@ -23,5 +21,4 @@ RSpec.describe AuthenticateUser do
       end
     end
   end
-
 end

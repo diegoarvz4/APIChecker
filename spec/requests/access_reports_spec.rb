@@ -26,32 +26,35 @@ RSpec.describe 'Access Reports API', type: :request do
     }
   }
 
-  context 'When the user is an admin' do 
+  
+  # if the requester is and admin, allow this actions
+  context 'when user admin' do 
     describe 'GET /access_reports' do 
       before { get '/access_reports', params: {}, headers: admin_headers}
 
       it 'gives back all access reports' do
+        expect(response).to have_http_status(200)
         expect(JSON.parse(response.body).size).to eq(6)
       end
     end
 
     describe 'GET /access_reports/:id' do
-      before { get "/access_reports/#{1}", params: {}, headers: admin_headers}
+      before { get "/access_reports/#{access_reports_id}", params: {}, headers: admin_headers}
 
       it 'gives back all access reports' do
-        expect(JSON.parse(response.body).size).to eq(1)
+        expect(response).to have_http_status(200)
       end
     end
 
-    describe 'POST /access_reports' do 
-      let(:valid_attributes) {
+    describe 'POST /access_reports' do
+      let(:valid_attributes){
         {
           employee_id: non_admin_1.id,
           entry: Time.now
         }
       }
 
-      before { post "/access_reports", params: valid_attributes.to_json, headers: admin_headers }
+      before { post '/access_reports', params: valid_attributes.to_json, headers: admin_headers }
 
       it 'creates the access report and gives back a success message' do
         expect(JSON.parse(response.body)['message']).to match(/Access Report created/)
@@ -67,7 +70,7 @@ RSpec.describe 'Access Reports API', type: :request do
       }
       before { put "/access_reports/#{access_reports_id}", params: valid_attributes.to_json, headers: admin_headers }
 
-      it "updates an access report with id" do
+      it 'updates access report with id' do
         expect(JSON.parse(response.body)['message']).to match(/Access Report updated!/)
       end
     end
@@ -75,13 +78,14 @@ RSpec.describe 'Access Reports API', type: :request do
     describe 'DELETE /access_reports/:id' do 
 
       before { delete "/access_reports/#{access_reports_id}", params: {}, headers: admin_headers }
-      it "deletes an specific access report" do
+      it 'deletes specific access report' do
         expect(JSON.parse(response.body)['message']).to match(/Access Report Deleted!/)
       end
     end
 
   end
 
+  # if user is not admin it should raise error messages
 
   context 'when the user is not admin' do 
     describe 'GET /access_reports' do 
@@ -115,7 +119,7 @@ RSpec.describe 'Access Reports API', type: :request do
           entry: Time.now
         }
       }
-      before { post "/access_reports", params: valid_attributes.to_json, headers: non_admin_1_headers }
+      before { post '/access_reports', params: valid_attributes.to_json, headers: non_admin_1_headers }
       it 'gives an error message' do
         expect(JSON.parse(response.body)['message']).to match(/Unauthorized/)
       end
@@ -130,19 +134,17 @@ RSpec.describe 'Access Reports API', type: :request do
       }
       before { put "/access_reports/#{access_reports_id}", params: valid_attributes.to_json, headers: non_admin_1_headers }
 
-      it "gives an error message" do
+      it 'gives an error message' do
         expect(JSON.parse(response.body)['message']).to match(/Unauthorized/)
       end
     end
 
-    describe 'DELETE /access_reports/:id' do 
+    describe 'DELETE /access_reports/:id' do
 
       before { delete "/access_reports/#{access_reports_id}", params: {}, headers: non_admin_1_headers }
-      it "gives an error message" do
+      it 'gives an error message' do
         expect(JSON.parse(response.body)['message']).to match(/Unauthorized/)
       end
     end
-
   end
-
 end

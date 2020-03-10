@@ -2,14 +2,13 @@ require 'rails_helper'
 
 RSpec.describe AuthorizeApiRequest do
   let(:user) { create(:user) }
-  # Authorized Token Header
+
   let(:header) { { 'Authorization' => JsonWebToken.encode(user_id: user.id) } }
   subject(:invalid_request_obj) { described_class.new({}) }
   subject(:request_obj) { described_class.new(header) }
 
-  # AuthorizeApiRequest Tests
-  describe '# AuthorizeApiRequest call' do
-    # expect to return a user object
+  describe '#AuthorizeApiRequest call' do
+    # Valid requests returns a user object
     context 'when valid request' do
       it 'returns user object' do
         result = request_obj.call
@@ -18,7 +17,7 @@ RSpec.describe AuthorizeApiRequest do
     end
 
     # Invalid Requests
-    context 'when invalid request' do
+    describe 'when invalid request' do
       context 'when missing token' do
         it 'raises a MissingToken error' do
           expect { invalid_request_obj.call }
@@ -51,7 +50,7 @@ RSpec.describe AuthorizeApiRequest do
       end
 
       context 'fake token' do
-        let(:header) { { 'Authorization' => 'foobar' } }
+        let(:header) { { 'Authorization' => 'sfasd' } }
         subject(:invalid_request_obj) { described_class.new(header) }
 
         it 'handles JWT::DecodeError' do

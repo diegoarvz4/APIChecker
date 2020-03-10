@@ -6,6 +6,7 @@ RSpec.describe AuthenticationController, type: :controller do
   let(:invalid_headers) { { Authorization: nil } }
 
   describe '#authorize request' do
+    # if token exists, it should set the current user
     context 'when auth token is sent' do
       before { allow(request).to receive(:headers).and_return(headers) }
 
@@ -13,7 +14,7 @@ RSpec.describe AuthenticationController, type: :controller do
         expect(subject.instance_eval { authorize_request }).to eq(user)
       end
     end
-
+    # if token does not exists or is not send, send back a MissingToken Error
     context 'when no auth token is sent' do
       before { allow(request).to receive(:headers).and_return(invalid_headers) }
 

@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe AccessReport, type: :model do
   it { should validate_presence_of(:entry) }
   it { should belong_to(:employee) }
+
+  # Check that an employee cannot have the same entry date twice
   it 'validates the uniqueness of an entry scoping an employee' do
     date = Time.now
     employee = User.create(name: 'Employee', username: 'BestEmployee', password: '123456', password_confirmation: '123456')
