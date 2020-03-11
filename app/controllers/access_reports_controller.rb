@@ -20,12 +20,12 @@ class AccessReportsController < ApplicationController
 
   def show
     access_report = AccessReport.find(params[:id])
-    if current_user.admin? || current_user.access_reports.include?(access_report)
+    if current_user.admin || current_user.access_reports.include?(access_report)
       render json: access_report, 
         except: [:created_at, :updated_at],
         status: :ok
     else
-      render json: { message: 'Unauthorized'}, status: :unauthorized unless current_user.admin
+      render json: { message: 'Unauthorized'}, status: :unauthorized
     end
   end
 

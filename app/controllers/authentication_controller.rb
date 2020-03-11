@@ -4,7 +4,8 @@ class AuthenticationController < ApplicationController
 
   def create
     auth_token = AuthenticateUser.new(auth_params[:username], auth_params[:password ]).call
-    render json: { auth_token: auth_token }, status: :ok
+    user = User.find_by(username: auth_params[:username])
+    render json: { auth_token: auth_token, admin: user.admin }, status: :ok
   end
 
   private 
