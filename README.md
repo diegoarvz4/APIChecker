@@ -20,6 +20,7 @@ This API helps you manage the entry and exit of your employees. Handle that info
 
 ## API Endpoint
 
+https://evening-tundra-23085.herokuapp.com/
 
 ## Getting Started
 
